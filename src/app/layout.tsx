@@ -2,6 +2,7 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { ApolloProvider} from "@apollo/client"
 import { client } from "@/lib/apollo";
 import ApolloClientProvider from "@/components/ApolloClientProvider";
@@ -25,6 +26,7 @@ export default function RootLayout({
         <ApolloClientProvider>
           <Header/>
           {children}
+          <Footer/>
         </ApolloClientProvider>
 
         
