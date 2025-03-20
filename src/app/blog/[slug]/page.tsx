@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { client } from "@/lib/apollo";
 import { notFound } from "next/navigation";
 import { RichText } from "@graphcms/rich-text-react-renderer";
-import { ElementNode} from "@graphcms/rich-text-types"
+import { ElementNode } from "@graphcms/rich-text-types";
 
 const GET_POST = gql`
   query GetPost($slugPost: String!) {
@@ -27,29 +27,29 @@ const GET_POST = gql`
 
 interface PostDataProps {
   post: {
-    id: string
-    title: string
+    id: string;
+    title: string;
     coverImage: {
-      url: string
-    }
+      url: string;
+    };
     author: {
-      name: string
-    }
-    createdAt: string
+      name: string;
+    };
+    createdAt: string;
     content: {
-      json: ElementNode[]
-    }
-
-  }
+      json: ElementNode[];
+    };
+  };
 }
 
 interface PostProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // 🚀 Obtendo dados do post diretamente na página (substitui getStaticProps)
 export default async function BlogPost({ params }: PostProps) {
-  const { slug } = params;
+  // 🛠️ Aguarda a resolução de `params`
+  const { slug } = await params;
 
   // 🔹 Buscando os dados do post no servidor
   const { data } = await client.query<PostDataProps>({
@@ -61,8 +61,6 @@ export default async function BlogPost({ params }: PostProps) {
   if (!data.post) {
     notFound();
   }
-
-  
 
   const { title, coverImage, author, createdAt, content } = data.post;
 
@@ -86,21 +84,40 @@ export default async function BlogPost({ params }: PostProps) {
         </h1>
         <div>
           <p className="font-bold text-zinc-900">{author.name}</p>
-          <p className="text-zinc-600">{new Date(createdAt).toLocaleDateString("pt-BR")}</p>
+          <p className="text-zinc-600">
+            {new Date(createdAt).toLocaleDateString("pt-BR")}
+          </p>
         </div>
         <div className="mt-4 sm:mt-8">
-          <RichText 
+          <RichText
             renderers={{
-              p: ({children}) => <p className="text-zinc-600 mt-1 text-sm sm:text-base text-justify lg:text-left">{children}</p>
+              p: ({ children }) => (
+                <p className="text-zinc-600 mt-1 text-sm sm:text-base text-justify lg:text-left">
+                  {children}
+                </p>
+              ),
             }}
             content={content.json}
           />
         </div>
-        {/* <p className="text-zinc-600 mt-4 sm:mt-8 text-sm sm:text-base text-justify lg:text-left">
-          
-        </p> */}
       </div>
     </div>
   );
 }
 
+// 🔹 Gerando os slugs de forma estática
+export async function generateStaticParams() {
+  const { data } = await client.query({
+    query: gql`
+      query {
+        posts {
+          slug
+        }
+      }
+    `,
+  });
+
+  return data.posts.map((post: { slug: string }) => ({
+    slug: post.slug,
+  }));
+}
