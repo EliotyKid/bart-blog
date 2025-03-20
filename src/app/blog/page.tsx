@@ -1,8 +1,49 @@
+"use client"
+
 import CardPost from "@/components/CardPost"
 import Image from "next/image"
 import Link from "next/link"
+import {gql, useQuery} from '@apollo/client'
 
 export default function BlogHome(){
+  const GET_ALL_POSTS = gql`
+    query GetAllPosts {
+      posts {
+        subtitle
+        slug
+        id
+        title
+        coverImage {
+          url
+        }
+        author {
+          name
+        }
+        createdAt
+      }
+    }
+  `
+
+  interface AllPosts {
+    posts: {
+      id: string
+      slug: string
+      subtitle: string
+      title: string
+      createdAt: string
+      coverImage: {
+        url: string
+      }
+      author: {
+        name: string
+      }
+    }[]
+  }
+
+  const { loading, data, error} = useQuery<AllPosts>(GET_ALL_POSTS)
+
+  console.log(data?.posts)
+
   return(
     <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4">
       <Link href="/blog/post" className="w-full h-full flex flex-col sm:flex-row gap-4 lg:gap-8 items-center justify-center hover:brightness-75 transition-all duration-300">
