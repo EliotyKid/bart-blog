@@ -65,7 +65,7 @@ export default async function BlogPost({ params }: PostProps) {
   const { title, coverImage, author, createdAt, content } = data.post;
 
   return (
-    <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4">
+    <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4 mt-8">
       <Link
         href="/blog"
         className="flex w-full max-w-fit font-bold text-zinc-900 cursor-pointer"

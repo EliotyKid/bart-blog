@@ -52,7 +52,7 @@ export default async function BlogHome(){
   const {data} = await client.query<AllPosts>({ query: GET_ALL_POSTS})
 
   return(
-    <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4">
+    <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4 mt-8">
       {data ?
         <>
           <Link href={`/blog/${data.posts[0].slug}`} className="w-full h-full flex flex-col sm:flex-row gap-4 lg:gap-8 items-center justify-center hover:brightness-75 transition-all duration-300">
