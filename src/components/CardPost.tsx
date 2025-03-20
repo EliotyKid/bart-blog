@@ -10,11 +10,12 @@ interface CardPostProps {
   author: string
   createdAt: string
   url: string
+  slug: string
 }
 
-export default function CardPost({title, subtitle, author, createdAt, url}:CardPostProps){
+export default function CardPost({title, subtitle, author, createdAt, url, slug}:CardPostProps){
   return (
-    <Link href="/blog/post" className="w-full sm:max-w-[352px] h-full flex flex-col items-center justify-between gap-2 sm:gap-4 hover:brightness-75 transition-all duration-300">
+    <Link href={`/blog/${slug}`} className="w-full sm:max-w-[352px] h-full flex flex-col items-center justify-between gap-2 sm:gap-4 hover:brightness-75 transition-all duration-300">
       <div className="flex w-full h-[200px] sm:h-[234px] relative rounded-2xl overflow-hidden">
         <Image
           src={url}

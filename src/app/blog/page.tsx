@@ -1,5 +1,3 @@
-"use client"
-
 import CardPost from "@/components/CardPost"
 import Image from "next/image"
 import Link from "next/link"
@@ -8,57 +6,56 @@ import Loading from "@/components/Loading"
 import Empty from "@/components/Empty"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale/pt-BR"
-
-export default function BlogHome(){
-  const GET_ALL_POSTS = gql`
-    query GetAllPosts {
-      posts(orderBy: createdAt_DESC) {
-        subtitle
-        slug
-        id
-        title
-        coverImage {
-          url
-        }
-        author {
-          name
-        }
-        createdAt
+import { client } from "@/lib/apollo"
+const GET_ALL_POSTS = gql`
+  query GetAllPosts {
+    posts(orderBy: createdAt_DESC) {
+      subtitle
+      slug
+      id
+      title
+      coverImage {
+        url
       }
+      author {
+        name
+      }
+      createdAt
     }
-  `
-
-  interface AllPosts {
-    posts: {
-      id: string
-      slug: string
-      subtitle: string
-      title: string
-      createdAt: string
-      coverImage: {
-        url: string
-      }
-      author: {
-        name: string
-      }
-    }[]
   }
+`
+interface AllPosts {
+  posts: {
+    id: string
+    slug: string
+    subtitle: string
+    title: string
+    createdAt: string
+    coverImage: {
+      url: string
+    }
+    author: {
+      name: string
+    }
+  }[]
+}
+export default async function BlogHome(){
+  // const { loading, data, error} = useQuery<AllPosts>(GET_ALL_POSTS)
 
-  const { loading, data, error} = useQuery<AllPosts>(GET_ALL_POSTS)
 
-  console.log(data?.posts)
+  // if(loading) {
+  //   return(
+  //     <Loading/>
+  //   )
+  // }
 
-  if(loading) {
-    return(
-      <Loading/>
-    )
-  }
+  const {data} = await client.query<AllPosts>({ query: GET_ALL_POSTS})
 
   return(
     <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4">
       {data ?
         <>
-          <Link href="/blog/post" className="w-full h-full flex flex-col sm:flex-row gap-4 lg:gap-8 items-center justify-center hover:brightness-75 transition-all duration-300">
+          <Link href={`/blog/${data.posts[0].slug}`} className="w-full h-full flex flex-col sm:flex-row gap-4 lg:gap-8 items-center justify-center hover:brightness-75 transition-all duration-300">
           <div className="flex flex-1 w-full h-full min-h-[240px] md:min-h-[334px] relative rounded-2xl overflow-hidden">
             <Image
               src={data?.posts[0].coverImage.url}
@@ -88,6 +85,7 @@ export default function BlogHome(){
                   subtitle={post.subtitle}
                   url={post.coverImage.url}
                   createdAt={post.createdAt}
+                  slug={post.slug}
                 />
               )
             }
@@ -103,3 +101,14 @@ export default function BlogHome(){
     </div>
   )
 }
+
+
+// export const  getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const {data} = await client.query({ query: GET_ALL_POSTS})
+
+//   return {
+//     props: {
+//       posts: data.posts,
+//     }
+//   }
+// }
