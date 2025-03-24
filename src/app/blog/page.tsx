@@ -7,6 +7,7 @@ import Empty from "@/components/Empty"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale/pt-BR"
 import { client } from "@/lib/apollo"
+import { string } from "zod"
 const GET_ALL_POSTS = gql`
   query GetAllPosts {
     posts(orderBy: createdAt_DESC) {
@@ -21,6 +22,7 @@ const GET_ALL_POSTS = gql`
         name
       }
       createdAt
+      tag
     }
   }
 `
@@ -37,6 +39,7 @@ interface AllPosts {
     author: {
       name: string
     }
+    tag: string[]
   }[]
 }
 export default async function BlogHome(){
@@ -50,6 +53,8 @@ export default async function BlogHome(){
   // }
 
   const {data} = await client.query<AllPosts>({ query: GET_ALL_POSTS})
+
+  console.log(data)
 
   return(
     <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4 mt-8">
@@ -69,6 +74,14 @@ export default async function BlogHome(){
                 <p className="text-zinc-600 text-sm md:text-base text-justify lg:text-left">{data?.posts[0].subtitle}</p>
               <div>
                   <p className="font-bold text-zinc-900 text-sm md:text-base">{data?.posts[0].author.name}</p>
+                  <div className="flex flex-wrap gap-4">
+                    {data?.posts[0].tag.map((tag, index) => {
+                      return(
+                        <p key={index} className="font-mono text-zinc-900 text-sm md:text-base bg-secondary/80 px-2 py-1 rounded-full">#{tag}</p>
+                      )
+                    })}
+                  </div>
+                  
                   <p className="text-zinc-600 text-xs md:text-sm">{format(new Date(data?.posts[0].createdAt),"dd 'de' MMM 'de' yyyy",{locale: ptBR})}</p>
               </div>
             </div>
