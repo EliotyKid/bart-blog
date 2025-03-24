@@ -28,7 +28,7 @@ export default function CardPost({title, subtitle, author, createdAt, url, slug}
         <h1 className="font-bold  text-primary text-ld sm:text-xl">{title}</h1>
         <p className="text-zinc-600 text-sm hidden sm:flex flex-1 text-justify lg:text-left">{subtitle}</p>
         <div>
-          <p className="font-bold text-zinc-900 text-sm md:text-base">{author}</p>
+          <p className="font-bold text-sm md:text-base text-shadow">{author}</p>
           <p className="text-zinc-600 text-xs md:text-sm">{format(new Date(createdAt),"dd 'de' MMM 'de' yyyy",{locale: ptBR})}</p>
         </div>
       </div>

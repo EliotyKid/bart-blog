@@ -71,35 +71,36 @@ export default function ContactForm() {
   return (
     <>
       <div className="min-h-dvh p-4">
-        <h1 className="text-center font-bold text-2xl my-6">Contato</h1>
+        <h1 className="text-center font-bold text-2xl my-6">Entre em contato</h1>
         <div className=" shadow-2xl rounded-2xl p-4 max-w-[720px] m-auto">
           <form onSubmit={handleSubmit(handleContact)} className="flex flex-col gap-4 ">
             <div className="flex flex-col w-full gap-2">
-              <Label>Nome</Label>
+              <Label>Nome:</Label>
               <Input {...register("name")} placeholder="Digite seu nome" type="text"/>
               {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
-              <Label>Telefone</Label>
+              <Label>Telefone:</Label>
               <Input {...register("phone")} placeholder="Digite seu número" type="text" />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
-              <Label>Email</Label>
+              <Label>Email:</Label>
               <Input {...register("email")} placeholder="Digite seu email" type="email"/>
               {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
             
             <div className="flex flex-col w-full gap-2">
-              <Label>Mensagem</Label>
+              <Label>Mensagem:</Label>
               <Textarea
                 placeholder="Digite sua mensagem..."
                 {...register("message")}
+                className="h-40"
               />
               {errors.message && <p className="text-red-500 text-sm">{errors.message.message}</p>}
             </div>
 
-            <Button type="submit" className="cursor-pointer" disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Enviar"}</Button>
+            <Button type="submit" className="cursor-pointer font-bold text-white" disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Enviar"}</Button>
           </form>
         </div>
       </div>

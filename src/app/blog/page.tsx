@@ -65,7 +65,7 @@ export default async function BlogHome(){
             />
             </div>
               <div className="flex flex-1 h-full flex-col gap-3 lg:gap-6">
-                <h1 className="font-bold text-3xl md:text-[40px] text-blue-600">{data?.posts[0].title}</h1>
+                <h1 className="font-bold text-3xl md:text-[40px] text-primary">{data?.posts[0].title}</h1>
                 <p className="text-zinc-600 text-sm md:text-base text-justify lg:text-left">{data?.posts[0].subtitle}</p>
               <div>
                   <p className="font-bold text-zinc-900 text-sm md:text-base">{data?.posts[0].author.name}</p>

@@ -6,11 +6,15 @@
 @theme {
   --font-poppins: Poppins, sans-serif;
   --color-primary: #6595BF;
+  --color-shadow: #1C2C3B;
+  --color-light: #BAD0D9;
+  --color-secondary: #F29580;
+  --color-secondary-light: #F6E0CC;
 }
 
 @layer components {
   .title {
-    @apply md:text-center text-3xl sm:text-4xl md:text-5xl !leading-[1.15] font-bold tracking-tighter;
+    @apply md:text-center text-3xl sm:text-4xl md:text-5xl !leading-[1.15] font-bold tracking-tighter text-shadow;
   }
 
   .paragrafo {
