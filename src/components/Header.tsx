@@ -28,7 +28,7 @@ export default function Header() {
         </ul>
 
         {/* Botão do menu (mobile) */}
-        <button className="md:hidden text-black" onClick={onToggleMenu} aria-label="Abrir menu">
+        <button className="md:hidden text-black cursor-pointer" onClick={onToggleMenu} aria-label="Abrir menu">
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </nav>

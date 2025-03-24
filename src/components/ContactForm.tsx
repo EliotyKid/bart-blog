@@ -1,19 +1,44 @@
 "use client";
-import { useState } from "react";
+
 import emailjs from "@emailjs/browser";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
+
+
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(3, "O nome deve ter pelo menos 3 caracteres")
+    .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "O nome deve conter apenas letras e espaços"),
+
+  email: z
+    .string()
+    .email("E-mail inválido"),
+
+  phone: z
+    .string()
+    .min(11, "O telefone deve ter pelo menos 12 caracteres")
+    .max(13, "O telefone deve ter no máximo 15 caracteres")
+    ,
+
+  message: z.string().min(1, "Mensagem é obrigatória"),
+});
+
+
+type FormSchema = z.infer<typeof formSchema>
 
 export default function ContactForm() {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
 
-  function sendEmail(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { isSubmitting, errors }, reset } = useForm<FormSchema>({
+    resolver: zodResolver(formSchema)
+  })
 
-    if (name === "" || email === "" || message === "") {
-      alert("Preencha todos os campos");
-      return;
-    }
+  function handleContact(data: FormSchema) {
 
     // Pegando as variáveis de ambiente e garantindo que sejam strings
     const serviceId = process.env.NEXT_PUBLIC_SERVICE_ID ?? "";
@@ -25,19 +50,22 @@ export default function ContactForm() {
       alert("Erro ao enviar email. Contate o suporte.");
       return;
     }
-
-    const templateParams = { name, email, message };
+    const name = data.name
+    const phone = data.phone
+    const email = data.email
+    const message = data.message
+    const templateParams = { name , phone, email, message };
 
     emailjs.send(serviceId, templateId, templateParams, publicKey)
-      .then((response) => {
-        console.log("EMAIL ENVIADO", response.status, response.text);
-        setName("");
-        setEmail("");
-        setMessage("");
-      })
-      .catch((err) => {
-        console.error("ERRO AO ENVIAR EMAIL:", err);
-      });
+    .then((response) => {
+      console.log("EMAIL ENVIADO", response.status, response.text);
+      
+    })
+    .catch((err) => {
+      console.error("ERRO AO ENVIAR EMAIL:", err);
+    });
+
+    reset()
   }
 
   return (
@@ -45,41 +73,33 @@ export default function ContactForm() {
       <div className="min-h-dvh p-4">
         <h1 className="text-center font-bold text-2xl my-6">Contato</h1>
         <div className=" shadow-2xl rounded-2xl p-4 max-w-[720px] m-auto">
-          <form onSubmit={sendEmail} className="flex flex-col gap-4 ">
-            <div className="flex flex-col w-full">
-              <label className=" px-4">Nome:</label>
-              <input
-                className="px-4 py-2 rounded-2xl shadow-xl border-2 border-black/10 "
-                type="text"
-                placeholder="Digite seu nome"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-              />
+          <form onSubmit={handleSubmit(handleContact)} className="flex flex-col gap-4 ">
+            <div className="flex flex-col w-full gap-2">
+              <Label>Nome</Label>
+              <Input {...register("name")} placeholder="Digite seu nome" type="text"/>
+              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
             </div>
-            <div className="flex flex-col w-full">
-              <label className=" px-4">Email:</label>
-              <input
-                className="px-4 py-2 rounded-2xl shadow-xl border-2 border-black/10"
-                type="email"
-                placeholder="Digite seu email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-              />
+            <div className="flex flex-col w-full gap-2">
+              <Label>Telefone</Label>
+              <Input {...register("phone")} placeholder="Digite seu número" type="text" />
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
-            <div className="flex flex-col w-full">
-              <label className=" px-4">Email:</label>
-              <textarea
-                className="px-4 py-2 rounded-2xl shadow-xl border-2 border-black/10 h-60"
+            <div className="flex flex-col w-full gap-2">
+              <Label>Email</Label>
+              <Input {...register("email")} placeholder="Digite seu email" type="email"/>
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            </div>
+            
+            <div className="flex flex-col w-full gap-2">
+              <Label>Mensagem</Label>
+              <Textarea
                 placeholder="Digite sua mensagem..."
-                onChange={(e) => setMessage(e.target.value)}
-                value={message}
+                {...register("message")}
               />
+              {errors.message && <p className="text-red-500 text-sm">{errors.message.message}</p>}
             </div>
 
-            <input 
-              className="cursor-pointer mt-4 text-xl font-bold border-2 border-black/10 rounded-full w-fit px-4 py-1 self-center hover:bg-black hover:text-white transition-all duration-300" 
-              type="submit" 
-              value="Enviar" />
+            <Button type="submit" className="cursor-pointer" disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Enviar"}</Button>
           </form>
         </div>
       </div>
