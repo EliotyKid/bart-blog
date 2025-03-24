@@ -41,7 +41,7 @@ const LastBlogs = async () => {
   console.log(data)
   return ( 
     <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4 mt-8">
-      <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-5xl font-bold mb-6 text-center">Confira as ultimas publicações</h1>
+      <h1 className="title">Confira as ultimas publicações</h1>
       <div className="flex flex-col items-center sm:grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8 mt-12">
         {data ? 
           <>

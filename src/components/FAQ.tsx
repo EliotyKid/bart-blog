@@ -13,7 +13,7 @@ const faq = FaqItems
 const FAQ = () => {
   return (
     <div id="faq" className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4 mt-8">
-      <h2 className="md:text-center text-3xl xs:text-4xl md:text-5xl !leading-[1.15] font-bold tracking-tighter">
+      <h2 className="title">
         Perguntas Frequentes
       </h2>
       <p className="mt-1.5 md:text-center xs:text-lg text-muted-foreground">
@@ -36,7 +36,7 @@ const FAQ = () => {
                 <AccordionPrimitive.Trigger
                   className={cn(
                     "flex flex-1 items-center justify-between py-4 font-semibold tracking-tight transition-all hover:underline [&[data-state=open]>svg]:rotate-45",
-                    "text-start text-lg"
+                    "text-start text-lg cursor-pointer"
                   )}
                 >
                   {question}

@@ -25,7 +25,7 @@ export default function CardPost({title, subtitle, author, createdAt, url, slug}
         />
       </div>
       <div className="flex flex-1 w-full flex-col justify-between gap-1 sm:gap-2">
-        <h1 className="font-bold  text-blue-600 text-ld sm:text-xl">{title}</h1>
+        <h1 className="font-bold  text-primary text-ld sm:text-xl">{title}</h1>
         <p className="text-zinc-600 text-sm hidden sm:flex flex-1 text-justify lg:text-left">{subtitle}</p>
         <div>
           <p className="font-bold text-zinc-900 text-sm md:text-base">{author}</p>
